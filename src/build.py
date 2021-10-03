@@ -3,7 +3,6 @@ from pathlib import Path
 import yaml
 import argparse
 import re 
-import schedule
 import time
 import os
 
@@ -95,33 +94,38 @@ dataService = """
   affinity: {}
 
 """
+
+
 ####ci####
-def ci (reg, tag, repo, branch, imageName):
+def ci (reg, tag, repo, branch, imageName,homeDir):
     system('git clone '+repo)
-    chdir(imageName)
+    chdir(homeDir+'/'+imageName)
     system('pwd')
     system('git checkout dev')
-    folderName(reg, tag, repo, branch, imageName)
+    print('ci')
+    folderName(reg, tag, repo, branch, imageName,homeDir)
 
 ####loop folder####
-def folderName(reg, tag, repo, branch, imageName):
+def folderName(reg, tag, repo, branch, imageName,homeDir):
   p=os.listdir()
   for i in p:
-    print('ggf')
     if os.path.isdir(i):
-        print(i)
-        build(reg, tag, repo, branch, imageName,i)
+        print('loop folder')
+        build(reg, tag, repo, branch, imageName,i,homeDir)
 
 ####build####
-def build (reg, tag, repo, branch, imageName,i):
+def build (reg, tag, repo, branch, imageName,i,homeDir):
+  system('ls')
+  chdir(i)
   system('docker build -t '+i+':'+tag+' .')
   system('docker push '+i+':'+tag)
-  deployment(imageName, data, namespace, dataService, chartName, host,i)
+  print ('build')
+  deployment(imageName, data, namespace, dataService, chartName, host,i,homeDir)
 
    
 
 ####configmap####
-def createConfigmap(imageName, namespace,i):
+def createConfigmap(imageName, namespace,i,homeDir):
     configmap="""
     apiVersion: v1
     kind: ConfigMap
@@ -130,21 +134,25 @@ def createConfigmap(imageName, namespace,i):
         namespace: {}
     data:
         master: refael """.format(i, namespace, )
-    chdir('home_dir/'+i)
+    chdir(homeDir+'/home_dir/'+i)
+    system('pwd')
+    system('ls')
     with open(i+'-configmap.yaml', 'w+' ) as file:
         docs = yaml.load(configmap,  Loader=yaml.FullLoader)
         yaml.dump(docs, file, sort_keys=False)
-        chdir('../../'+i)
-        for env in open('./peopel/'+i+".env","r+").readlines():
-            file = open("./../home_dir/"+i+"/"+i+"-configmap.yaml","a+")
+        chdir(homeDir+'/'+imageName+'/'+i)
+        system('pwd')
+        system('ls')
+        for env in open(i+".env","r+").readlines():
+            file = open(homeDir+"/home_dir/"+i+"/"+i+"-configmap.yaml","a+")
             tab = "  "
             file.write(str(tab+env))
     system('pwd')
-    chdir('./../home_dir/'+i)
+    chdir(homeDir+'/home_dir/'+i)
     system('kubectl create configmap {} --from-file={}-configmap.yaml -n {}' .format(i, i, namespace))
 
 ####deployment####
-def deployment (imageName, data, namespace, dataService, chartName, host,i):
+def deployment (imageName, data, namespace, dataService, chartName, host,i,homeDir):
     ingres=False
     system('pwd')
     for env in open(i+".env","r+").readlines():
@@ -153,22 +161,23 @@ def deployment (imageName, data, namespace, dataService, chartName, host,i):
             print(env)
             break
 
-    Path("./../../home_dir").mkdir(parents=True, exist_ok=True)
-    chdir("./../../home_dir")
+    Path(homeDir).mkdir(parents=True, exist_ok=True)
+    chdir(homeDir+"/home_dir")
+    system("pwd")
     system("helm create "+i )
     confFile = i+"-configmap"
     file = open(i+"/values.yaml","w+")
     docs = yaml.load(data.format(i, confFile),  Loader=yaml.FullLoader)
     yaml.dump(docs, file, sort_keys=False)
-    chdir("../")
+    chdir(homeDir)
 
-    createConfigmap(imageName, namespace,i)
+    createConfigmap(imageName, namespace,i,homeDir)
 
-    file = open("values.yaml","a+")
+    file = open(homeDir+'/home_dir/'+i+"/values.yaml","a+")
     docs = yaml.load(dataService.format("","","","",ingres,host,"","",""),  Loader=yaml.FullLoader)
     yaml.dump(docs, file,sort_keys=False)
     file.close()
-    chdir("../")
+    chdir(homeDir+'/home_dir/'+i)
     system("helm upgrade {} {}  -n {} ".format(chartName, imageName, namespace))
 
 
@@ -201,11 +210,12 @@ repo = ('https://github.com/refaelb/image_project.git')
 tag = ('0.01')
 reg = ('refael058325/ci')
 branch = ('dev')
+homeDir = ('/home/refael/script/ci-cd/src')
 
 
 a = repo.rsplit('.',1)[0]
 imageName = a.rsplit('/',3)[3]
-print(imageName)
+ci(reg, tag, repo, branch,imageName,homeDir)
 
 
 
@@ -215,5 +225,3 @@ print(imageName)
 #     schedule.run_pending()
 #     time.sleep(60) # wait one minute
 
-
-ci(reg, tag, repo, branch,imageName)
