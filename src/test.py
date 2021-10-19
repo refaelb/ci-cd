@@ -16,7 +16,7 @@ image:
   repository: {}
   pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "latest"
+  tag: {}.{}
 
 imagePullSecrets: []
 nameOverride: ""
@@ -130,7 +130,7 @@ for i in p:
             system("helm create "+i )
             confFile = i+"-configmap"
             file = open(i+"/values.yaml","w+")
-            docs = yaml.load(data.format(i, confFile),  Loader=yaml.FullLoader)
+            docs = yaml.load(data.format(reg, i, tag, confFile),  Loader=yaml.FullLoader)
             yaml.dump(docs, file, sort_keys=False)
             chdir("../")
             file = open("values.yaml","a+")
