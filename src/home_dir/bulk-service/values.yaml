@@ -1,0 +1,9 @@
+replicaCount: 1
+image:
+  repository: bulk-service
+  pullPolicy: Always
+  tag: latest
+imagePullSecrets: []
+nameOverride: ''
+fullnameOverride: ''
+configmap: bulk-service-configmap

@@ -1,0 +1,9 @@
+replicaCount: 1
+image:
+  repository: spike-service
+  pullPolicy: Always
+  tag: latest
+imagePullSecrets: []
+nameOverride: ''
+fullnameOverride: ''
+configmap: spike-service-configmap

@@ -1,0 +1,9 @@
+replicaCount: 1
+image:
+  repository: whiteListSync-script
+  pullPolicy: Always
+  tag: latest
+imagePullSecrets: []
+nameOverride: ''
+fullnameOverride: ''
+configmap: whiteListSync-script-configmap

@@ -1,0 +1,9 @@
+replicaCount: 1
+image:
+  repository: notification-service
+  pullPolicy: Always
+  tag: latest
+imagePullSecrets: []
+nameOverride: ''
+fullnameOverride: ''
+configmap: notification-service-configmap

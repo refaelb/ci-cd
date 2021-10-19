@@ -1,0 +1,9 @@
+replicaCount: 1
+image:
+  repository: population-script
+  pullPolicy: Always
+  tag: latest
+imagePullSecrets: []
+nameOverride: ''
+fullnameOverride: ''
+configmap: population-script-configmap

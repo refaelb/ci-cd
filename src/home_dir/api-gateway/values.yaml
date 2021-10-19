@@ -1,0 +1,9 @@
+replicaCount: 1
+image:
+  repository: api-gateway
+  pullPolicy: Always
+  tag: latest
+imagePullSecrets: []
+nameOverride: ''
+fullnameOverride: ''
+configmap: api-gateway-configmap

@@ -1,0 +1,9 @@
+replicaCount: 1
+image:
+  repository: kartoffel-service
+  pullPolicy: Always
+  tag: latest
+imagePullSecrets: []
+nameOverride: ''
+fullnameOverride: ''
+configmap: kartoffel-service-configmap

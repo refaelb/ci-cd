@@ -1,0 +1,9 @@
+replicaCount: 1
+image:
+  repository: authentication-service
+  pullPolicy: Always
+  tag: latest
+imagePullSecrets: []
+nameOverride: ''
+fullnameOverride: ''
+configmap: authentication-service-configmap
