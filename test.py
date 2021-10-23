@@ -46,7 +46,7 @@ configmap="""
 apiVersion: v1
 kind: ConfigMap
 metadata:
-    name: {}ConfigMap
+    name: {}-ConfigMap
     namespace: {} """.format(imageName, namespace, )
 os.chdir(workdir+'/home_dir/')
 with open(imageName+'-configmap.yaml', 'a+' ) as file:

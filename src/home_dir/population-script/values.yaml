@@ -1,9 +1,41 @@
 replicaCount: 1
 image:
-  repository: population-script
+  repository: refael058325/ci
   pullPolicy: Always
-  tag: latest
+  tag: population-script.0.0.1
 imagePullSecrets: []
 nameOverride: ''
 fullnameOverride: ''
 configmap: population-script-configmap
+serviceAccount:
+  create: true
+  annotations: null
+  name: ''
+podAnnotations: null
+podSecurityContext: null
+securityContext: null
+service:
+  type: ClusterIP
+  port: 3000
+ingress:
+  enabled: false
+  annotations:
+    kubernetes.io/ingress.class: addon-http-application-routing
+  hosts:
+  - host: test
+    paths:
+    - path: /
+      pathType: ImplementationSpecific
+      backend:
+        serviceName: chart-example.local
+        servicePort: 3000
+  tls: []
+resources: null
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+nodeSelector: null
+tolerations: []
+affinity: null

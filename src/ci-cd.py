@@ -132,16 +132,14 @@ for i in p:
             file = open(i+"/values.yaml","w+")
             docs = yaml.load(data.format(reg, i, tag, confFile),  Loader=yaml.FullLoader)
             yaml.dump(docs, file, sort_keys=False)
-            chdir("../")
-            file = open("values.yaml","a+")
+            # chdir("../")
+            file = open(i+"/values.yaml","a+")
             docs = yaml.load(dataService.format("","","","",ingres,host,"","",""),  Loader=yaml.FullLoader)
             yaml.dump(docs, file,sort_keys=False)
             file.close()
             chdir("../")
             system("helm upgrade {} {}  -n {} ".format(chartName, imageName, namespace))
             chdir(workdir+'/'+imageName)
-
-
         else:
             chdir('./..')
                
