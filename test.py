@@ -43,6 +43,7 @@ for i, line in enumerate(fileinput.input(workdir+'/home_dir/'+imageName+'-config
     sys.stdout.write(line.replace('\n', '\n  '))  
 
 configmap="""
+master: refael
 apiVersion: v1
 kind: ConfigMap
 metadata:

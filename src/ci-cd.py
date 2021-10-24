@@ -138,7 +138,7 @@ for i in p:
             yaml.dump(docs, file,sort_keys=False)
             file.close()
             chdir("../")
-            system("helm upgrade {} {}  -n {} ".format(chartName, imageName, namespace))
+            # system("helm upgrade {} {}  -n {} ".format(chartName, imageName, namespace))
             chdir(workdir+'/'+imageName)
         else:
             chdir('./..')
