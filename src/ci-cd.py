@@ -3,7 +3,7 @@ from pathlib import Path
 import yaml
 import argparse
 import re 
-# import schedule
+from createConfigMap import configmap
 import time
 import os
 
@@ -143,27 +143,4 @@ for i in p:
         else:
             chdir('./..')
                
-
-####configmap####
-# def createConfigmap(imageName, namespace,i):
-configmap="""
-apiVersion: v1
-kind: ConfigMap
-metadata:
-    name: {}ConfigMap
-    namespace: {}
-data:
-    master: refael """.format(imageName, namespace, )
-chdir(workdir+'/home_dir/')
-with open(imageName+'-configmap.yaml', 'w+' ) as file:
-    docs = yaml.load(configmap,  Loader=yaml.FullLoader)
-    yaml.dump(docs, file, sort_keys=False)
-    # chdir(workdir+'/home_dir')
-    with open(imageName+'/'+imageName+".env","r+").readlines() as env:
-        file = open(workdir+"/home_dir/"+imageName+"-configmap.yaml","a+")
-        tab = "  "
-        file.write(str(tab+env))
-system('pwd')
-# chdir('./home_dir/')
-system('kubectl create configmap {} --from-file={}-configmap.yaml -n {}' .format(i, i, namespace))
-system('kubectl apply -f {}-configmap.yaml -n {}'.format( i, namespace))
+configmap(namespace, workdir, imageName)
