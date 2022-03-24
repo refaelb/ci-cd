@@ -1,0 +1,9 @@
+replicaCount: 1
+image:
+  repository: refael058325/ci
+  pullPolicy: Always
+  tag: whiteListSync-script.0.0.1
+imagePullSecrets: []
+nameOverride: ''
+fullnameOverride: ''
+configmap: whiteListSync-script-configmap
